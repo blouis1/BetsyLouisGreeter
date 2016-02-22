@@ -13,6 +13,7 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
     private MainActivity activity;
     private EditText nameEditText;
     TextView greetMessage;
+    Button greetButton;
     Button reverseButton;
 
     public MainActivityTests() {
@@ -23,8 +24,9 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
     public void setUp() {
         this.activity = getActivity();
         this.nameEditText = (EditText) this.activity.findViewById(R.id.greet_edit_text);
-        this.reverseButton = (Button) this.activity.findViewById(R.id.reverse_button);
         this.greetMessage = (TextView) this.activity.findViewById(R.id.message_text_view);
+        this.greetButton = (Button) this.activity.findViewById(R.id.greet_button);
+        this.reverseButton = (Button) this.activity.findViewById(R.id.reverse_button);
     }
 
     public void testActivityExists() {
@@ -36,6 +38,16 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
     }
 
     public void testGreet() {
+
+        this.enterInput();
+        this.clickGreet();
+
+        String expectedString = "Hello, Jake!";
+        String actualText = this.greetMessage.getText().toString();
+        assertEquals(expectedString, actualText);
+    }
+
+    private void enterInput() {
         getInstrumentation().runOnMainSync(new Runnable() {
             @Override
             public void run() {
@@ -43,33 +55,29 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
                 MainActivityTests.this.nameEditText.setText("Jake");
             }
         });
-
-        /*getInstrumentation().waitForIdleSync();
-        getInstrumentation().sendStringSync("Jake");*/
-
-        // Tap "Greet" button
-        // ----------------------
-
-        this.clickGreet();
-
-        // Verify greet message
-        // ----------------------
-
-        String actualText = this.greetMessage.getText().toString();
-        String testString = "Hello, Jake!";
-        //String testString = "Hello, " + nameEditText.getText().toString() + "!";
-        assertEquals(testString, actualText);
     }
 
     // Tap "Greet" button
     private void clickGreet() {
-        Button greetButton =
-                (Button) this.activity.findViewById(R.id.greet_button);
-        TouchUtils.clickView(this, greetButton);
+        TouchUtils.clickView(this, this.greetButton);
     }
 
     public void testReverseButtonIsEnabledWhenGreetIsClicked() {
         this.clickGreet();
         assertTrue(this.reverseButton.isEnabled());
+    }
+
+    // Tap "Reverse" button
+    private void clickReverse() {
+        TouchUtils.clickView(this, this.reverseButton);
+    }
+
+    public void testTextIsReversedWhenBothButtonsAreClicked() {
+        this.enterInput();
+        this.clickGreet();
+        this.clickReverse();
+        String expectedString = "!ekaJ ,olleH";
+        String actualText = this.greetMessage.getText().toString();
+        assertEquals(expectedString, actualText);
     }
 }

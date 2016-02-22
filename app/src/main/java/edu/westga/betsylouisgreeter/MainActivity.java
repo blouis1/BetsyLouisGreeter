@@ -14,10 +14,19 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
+    Button reverseButton;
+    EditText greetEditText;
+    TextView messageTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.reverseButton = (Button) findViewById(R.id.reverse_button);
+        this.greetEditText = (EditText) findViewById(R.id.greet_edit_text);
+        this.messageTextView = (TextView) findViewById(R.id.message_text_view);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -54,19 +63,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void didTapGreetButton(View view) {
-        Button reverseButton =
-                (Button) findViewById(R.id.reverse_button);
-        reverseButton.setEnabled(true);
-
-        EditText greetEditText =
-                (EditText) findViewById(R.id.greet_edit_text);
-
-        String name = greetEditText.getText().toString();
+        this.reverseButton.setEnabled(true);
+        String name = this.greetEditText.getText().toString();
         String greeting = String.format("Hello, %s!", name);
-
-        TextView messageTextView =
-                (TextView) findViewById(R.id.message_text_view);
-
         messageTextView.setText(greeting);
+    }
+
+    public void reverseText (View view) {
+        String message = this.messageTextView.getText().toString();
+        StringBuilder stringBuilder = new StringBuilder(message);
+        stringBuilder.reverse();
+        this.messageTextView.setText(stringBuilder);
     }
 }
